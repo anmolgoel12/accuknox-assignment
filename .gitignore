@@ -1,0 +1,20 @@
+.vscode/
+static/*
+.idea/
+media/*
+*.sqlite3
+main/static/*
+env/*
+*.pyc
+.DS_Store
+#environment file
+accuknox/.env
+#local env
+venv
+venvv
+env
+venvv
+config
+# logger 
+logg.txt
+__pycache__
