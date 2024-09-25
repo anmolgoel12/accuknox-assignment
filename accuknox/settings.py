@@ -5,6 +5,7 @@ Django version used : 4.2
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -29,6 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework_simplejwt",
     "rest_framework.authtoken",
     "apps.accounts",
 ]
@@ -107,7 +109,7 @@ MEDIA_URL = "/media/"
 AUTH_USER_MODEL = "accounts.User"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "EXCEPTION_HANDLER": "accuknox.exception.my_exception_handler",
     "DEFAULT_THROTTLE_CLASSES": (
@@ -115,14 +117,25 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.ScopedRateThrottle",
     ),
     "DEFAULT_THROTTLE_RATES": {"user": "3/min", "connections.request": "3/min"},
+    "PAGE_SIZE": 10,
 }
-
+## JWT Configuration
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,  # Optional: Rotate refresh tokens
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
-
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": BASE_DIR / "cache",
+    }
+}
 # database
 DATABASES = {
     "default": {

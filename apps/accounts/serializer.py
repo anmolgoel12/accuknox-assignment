@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import serializers
 
 from .models import Connections
@@ -15,9 +16,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         email = validated_data.pop("email")
         password = validated_data.pop("password")
+        group = Group.objects.get(pk=(self.context["request"]).data.get("role", 1))
         user = User.objects.create_user(
-            email=email, password=password, **validated_data
+            email=email.lower(), password=password, **validated_data
         )
+        user.groups.add(group)
         return user
 
 

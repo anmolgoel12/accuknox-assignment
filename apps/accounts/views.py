@@ -1,3 +1,6 @@
+from django.core.cache import cache
+from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import Q
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -7,7 +10,10 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from accuknox.permission import RBACPermission
 from accuknox.utils import custom_success_response, update_object_response
 
 from .models import *
@@ -32,6 +38,13 @@ class UserViewSet(ModelViewSet):
         method = self.request.method.lower()
         return UserSerializer if method in ("get", "delete") else CreateUserSerializer
 
+    def get_permissions(self):
+        method = self.request.method.lower()
+        if method == "get":
+            return [IsAuthenticated(), RBACPermission()]
+        else:
+            return []
+
     def create(self, request, *args, **kwargs):
 
         serializer = self.get_serializer(data=request.data)
@@ -42,14 +55,18 @@ class UserViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         search = request.query_params.get("search", None)
         users = User.objects.filter(Q(email=search) | Q(name__icontains=search))
-        return custom_success_response(UserSearchSerializer(users, many=True).data)
+        paginator = Paginator(users, 10)
+        page_number = request.GET.get("page", 0)
+        page_obj = paginator.get_page(page_number)
+        return custom_success_response(
+            UserSearchSerializer(page_obj, many=True).data,
+            **{"current_number": page_number, "total_pages": paginator.num_pages},
+        )
 
     @action(
         detail=False,
         methods=["get"],
-        permission_classes=[
-            IsAuthenticated,
-        ],
+        permission_classes=[IsAuthenticated, RBACPermission],
     )
     def my_account(self, request):
         return custom_success_response(self.get_serializer(request.user).data)
@@ -61,21 +78,22 @@ required field: username['email'], password
 """
 
 
-class Login(ObtainAuthToken):
+class Login(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(
-            data=request.data, context={"request": request}
-        )
+        # email case insensitive
+        data = {
+            "email": request.data.get("email", None).lower(),
+            "password": request.data.get("password", None),
+        }
+        serializer = TokenObtainPairSerializer(data=data, context={"request": request})
         if serializer.is_valid(raise_exception=True):
-            user = serializer.validated_data["user"]
-            token, created = Token.objects.get_or_create(user=user)
-
+            user = User.objects.get(email=data["email"])
             return custom_success_response(
                 {
-                    "token": token.key,
                     "user_id": user.pk,
                     "email": user.email,
                     "name": user.name,
+                    **serializer.validated_data,
                 }
             )
 
@@ -83,7 +101,7 @@ class Login(ObtainAuthToken):
 class ConnectionsViewSet(ModelViewSet):
     queryset = Connections.objects.all()
     serializer_class = UserSearchSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, RBACPermission]
 
     def list(self, request):
         """
@@ -92,8 +110,12 @@ class ConnectionsViewSet(ModelViewSet):
         friend_list = Connections.objects.filter(
             Q(from_user=request.user) | Q(to_user=request.user)
         ).filter(state=True)
-
+        cache_key = f"friend_list_{request.user.id}"
+        cached_data = cache.get(cache_key)
+        if cached_data is not None:
+            return custom_success_response(cached_data)  # Return cached data
         serializer = ConnectionInvitationSerializer(friend_list, many=True)
+        cache.set(cache_key, serializer.data, timeout=60)  # Cache for 5 minutes
         return custom_success_response(serializer.data)
 
     @action(
@@ -108,19 +130,20 @@ class ConnectionsViewSet(ModelViewSet):
     )
     def request(self, request, pk):
         """
-        Sent friend request
+        Send friend request
         """
-        from_user = request.user
-        to_user = User.objects.get(pk=pk)
-        if not Connections.objects.filter(
-            from_user=from_user, to_user=to_user
-        ).exists():
-            if to_user == from_user:
-                raise ValidationError({"message": ["Cannot send request to self"]})
-            Connections.objects.get_or_create(from_user=from_user, to_user=to_user)
-            return update_object_response(message="success, Request sent")
-        else:
-            raise ValidationError({"message": ["Invitation from the user exists"]})
+        with transaction.atomic():
+            from_user = request.user
+            to_user = User.objects.get(pk=pk)
+            if not Connections.objects.filter(
+                from_user=from_user, to_user=to_user
+            ).exists():
+                if to_user == from_user:
+                    raise ValidationError({"message": ["Cannot send request to self"]})
+                Connections.objects.get_or_create(from_user=from_user, to_user=to_user)
+                return update_object_response(message="success, Request sent")
+            else:
+                raise ValidationError({"message": ["Invitation from the user exists"]})
 
     @action(
         detail=True,
@@ -133,14 +156,15 @@ class ConnectionsViewSet(ModelViewSet):
         """
         Accept Friend Request
         """
-        cr = self.get_object()
-        if not cr.to_user_id == request.user.id:
-            raise ValidationError(
-                {"message": ["Request is not owned by Logged In user"]}
-            )
-        cr.state = True
-        cr.save()
-        return update_object_response(message="success, Request accepted")
+        with transaction.atomic():
+            cr = self.get_object()
+            if not cr.to_user_id == request.user.id:
+                raise ValidationError(
+                    {"message": ["Request is not owned by Logged In user"]}
+                )
+            cr.state = True
+            cr.save()
+            return update_object_response(message="success, Request accepted")
 
     @action(
         detail=False,
@@ -152,10 +176,20 @@ class ConnectionsViewSet(ModelViewSet):
     def invitations(self, request, pk=None):
         """
         List all pending requests
+        o	Include pagination and sorting options (e.g., by the date of the request).
         """
-        conn_obj = Connections.objects.filter(to_user=request.user.id, state=None)
-        serializer = ConnectionInvitationSerializer(conn_obj, many=True)
-        return custom_success_response(serializer.data)
+        sort = request.query_params.get("date", 1)
+        conn_obj = Connections.objects.filter(
+            to_user=request.user.id, state=None
+        ).order_by(f"{'-' if sort =='1' else ''}timestamp")
+        paginator = Paginator(object_list=conn_obj, per_page=10)
+        page_number = request.GET.get("page", 0)
+        page_obj = paginator.get_page(page_number)
+        serializer = ConnectionInvitationSerializer(page_obj, many=True)
+        return custom_success_response(
+            serializer.data,
+            **{"current_number": page_number, "total_pages": paginator.num_pages},
+        )
 
     @action(
         detail=False,

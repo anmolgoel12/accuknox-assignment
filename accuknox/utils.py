@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from rest_framework import status
 
 
+## request's -> response is made common for all drf Response
 def custom_success_response(
     serialized_data,
     message="success",
