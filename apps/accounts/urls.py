@@ -9,6 +9,7 @@ app_name = "accounts"
 router = DefaultRouter()
 router.register("users", UserViewSet)
 router.register("connections", ConnectionsViewSet)
+router.register("connectionslog", ConnectionLogViewSet)
 
 urlpatterns = [
     re_path("login/$", Login.as_view(), name="user_login"),

@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 
-from .models import Connections
+from .models import ConnectionLog, Connections
 
 User = get_user_model()
 
@@ -50,4 +50,11 @@ class ConnectionInvitationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Connections
+        fields = "__all__"
+
+
+class ConnectionLogSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ConnectionLog
         fields = "__all__"

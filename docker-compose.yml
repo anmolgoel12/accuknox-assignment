@@ -7,3 +7,40 @@ services:
       - .:/accuknox_backend
     ports:
       - "8000:8000"
+
+version: '3'
+
+services:
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py loaddata myapp/fixtures/*.json &&
+             python manage.py collectstatic --noinput &&
+             python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/accuknox_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DEBUG=True
+      - DATABASE_URL=postgres://postgres:password@db:5432/mydatabase
+      - REDIS_URL=redis://redis:6379/0
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+
+volumes:
+  postgres_data:

@@ -1,10 +1,9 @@
 {
 	"info": {
-		"_postman_id": "07f4d594-2110-4e9e-acbd-41c35c181c67",
+		"_postman_id": "10488a69-36e1-413f-a5e9-2eb8382ddb57",
 		"name": "accuknox",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "10724276",
-		"_collection_link": "https://dark-zodiac-789458.postman.co/workspace/chalkmate~08a56803-f5e2-4b81-aa08-f7d74c4596eb/collection/10724276-07f4d594-2110-4e9e-acbd-41c35c181c67?action=share&source=collection_link&creator=10724276"
+		"_exporter_id": "10724276"
 	},
 	"item": [
 		{
@@ -246,8 +245,8 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "username",
-									"value": "p@p.comaaaaaassaasa",
+									"key": "email",
+									"value": "anmol@g.com",
 									"type": "text"
 								},
 								{
@@ -287,8 +286,8 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "username",
-											"value": "a@g.com",
+											"key": "email",
+											"value": "anmol@g.com",
 											"type": "text"
 										},
 										{
@@ -299,12 +298,10 @@
 									]
 								},
 								"url": {
-									"raw": "http://localhost:8000/api/v1/login/",
-									"protocol": "http",
+									"raw": "{{baseURL}}/api/v1/login/",
 									"host": [
-										"localhost"
+										"{{baseURL}}"
 									],
-									"port": "8000",
 									"path": [
 										"api",
 										"v1",
@@ -319,7 +316,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Sun, 24 Mar 2024 20:20:45 GMT"
+									"value": "Wed, 25 Sep 2024 06:42:39 GMT"
 								},
 								{
 									"key": "Server",
@@ -328,6 +325,10 @@
 								{
 									"key": "Content-Type",
 									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept"
 								},
 								{
 									"key": "Allow",
@@ -339,7 +340,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "128"
+									"value": "565"
 								},
 								{
 									"key": "X-Content-Type-Options",
@@ -348,100 +349,10 @@
 								{
 									"key": "Referrer-Policy",
 									"value": "same-origin"
-								},
-								{
-									"key": "Cross-Origin-Opener-Policy",
-									"value": "same-origin"
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"data\": {\n        \"token\": \"c95aa9af327d3931284fd2dd7d0e8125b5f99d50\",\n        \"user_id\": 1,\n        \"email\": \"a@g.com\",\n        \"name\": \"test\"\n    },\n    \"status\": \"1\"\n}"
-						},
-						{
-							"name": "error login",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Token ",
-										"type": "text",
-										"disabled": true
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "username",
-											"value": "a@g.com",
-											"type": "text"
-										},
-										{
-											"key": "password",
-											"value": "1234567",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "http://localhost:8000/api/v1/login/",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8000",
-									"path": [
-										"api",
-										"v1",
-										"login",
-										""
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "Date",
-									"value": "Sun, 24 Mar 2024 20:22:37 GMT"
-								},
-								{
-									"key": "Server",
-									"value": "WSGIServer/0.2 CPython/3.8.6"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json"
-								},
-								{
-									"key": "Allow",
-									"value": "POST, OPTIONS"
-								},
-								{
-									"key": "X-Frame-Options",
-									"value": "DENY"
-								},
-								{
-									"key": "Content-Length",
-									"value": "108"
-								},
-								{
-									"key": "X-Content-Type-Options",
-									"value": "nosniff"
-								},
-								{
-									"key": "Referrer-Policy",
-									"value": "same-origin"
-								},
-								{
-									"key": "Cross-Origin-Opener-Policy",
-									"value": "same-origin"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"error\": {\n        \"non_field_errors\": \"Unable to log in with provided credentials.\"\n    },\n    \"status\": \"0\",\n    \"message\": \"failed\"\n}"
+							"body": "{\n    \"data\": {\n        \"user_id\": 4,\n        \"email\": \"anmol@g.com\",\n        \"name\": \"test\",\n        \"refresh\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyNzMzMjk1OSwiaWF0IjoxNzI3MjQ2NTU5LCJqdGkiOiIzNTY1NjI0Y2YyZGY0YWE5OGI2MGNkM2IyNGFjMmM3OCIsInVzZXJfaWQiOjR9.YGYkfK8rgtNZZ1F60RcQ5YMNnEnw2toYo-WdpgLcvYg\",\n        \"access\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI3MjQ2ODU5LCJpYXQiOjE3MjcyNDY1NTksImp0aSI6IjRjZGZmNjIyMDA5NDQzODY4NDdjNDZhNWIxOTMyY2JkIiwidXNlcl9pZCI6NH0.SDGgO6SRObKr3JhULuW5lD3mPoWT7OyceUPeb8A61d0\"\n    },\n    \"status\": \"1\"\n}"
 						}
 					]
 				},
@@ -487,9 +398,9 @@
 					},
 					"response": [
 						{
-							"name": "user search",
+							"name": "permission RBAC",
 							"originalRequest": {
-								"method": "GET",
+								"method": "POST",
 								"header": [
 									{
 										"key": "Authorization",
@@ -500,10 +411,23 @@
 								],
 								"body": {
 									"mode": "formdata",
-									"formdata": []
+									"formdata": [
+										{
+											"key": "username",
+											"value": "anmol@g.com",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text",
+											"disabled": true
+										}
+									]
 								},
 								"url": {
-									"raw": "{{baseURL}}/api/v1/users/?search=a@g.com",
+									"raw": "{{baseURL}}/api/v1/users/my_account/",
 									"host": [
 										"{{baseURL}}"
 									],
@@ -511,23 +435,18 @@
 										"api",
 										"v1",
 										"users",
+										"my_account",
 										""
-									],
-									"query": [
-										{
-											"key": "search",
-											"value": "a@g.com"
-										}
 									]
 								}
 							},
-							"status": "OK",
-							"code": 200,
+							"status": "Bad Request",
+							"code": 400,
 							"_postman_previewlanguage": "json",
 							"header": [
 								{
 									"key": "Date",
-									"value": "Mon, 25 Mar 2024 14:05:41 GMT"
+									"value": "Wed, 25 Sep 2024 07:32:32 GMT"
 								},
 								{
 									"key": "Server",
@@ -543,7 +462,7 @@
 								},
 								{
 									"key": "Allow",
-									"value": "GET, POST, HEAD, OPTIONS"
+									"value": "POST, OPTIONS"
 								},
 								{
 									"key": "X-Frame-Options",
@@ -551,7 +470,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "72"
+									"value": "106"
 								},
 								{
 									"key": "X-Content-Type-Options",
@@ -560,17 +479,13 @@
 								{
 									"key": "Referrer-Policy",
 									"value": "same-origin"
-								},
-								{
-									"key": "Cross-Origin-Opener-Policy",
-									"value": "same-origin"
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"test\",\n            \"email\": \"a@g.com\"\n        }\n    ],\n    \"status\": \"1\"\n}"
+							"body": "{\n    \"error\": {\n        \"message\": \"You do not have permission to perform this action.\"\n    },\n    \"status\": \"0\",\n    \"message\": \"failed\"\n}"
 						},
 						{
-							"name": "login Copy",
+							"name": "user search paginator",
 							"originalRequest": {
 								"method": "GET",
 								"header": [
@@ -583,10 +498,23 @@
 								],
 								"body": {
 									"mode": "formdata",
-									"formdata": []
+									"formdata": [
+										{
+											"key": "username",
+											"value": "anmol@g.com",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text",
+											"disabled": true
+										}
+									]
 								},
 								"url": {
-									"raw": "{{baseURL}}/api/v1/users/?search=st",
+									"raw": "{{baseURL}}/api/v1/users/?search=test",
 									"host": [
 										"{{baseURL}}"
 									],
@@ -599,7 +527,7 @@
 									"query": [
 										{
 											"key": "search",
-											"value": "st"
+											"value": "test"
 										}
 									]
 								}
@@ -610,7 +538,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Mon, 25 Mar 2024 14:06:42 GMT"
+									"value": "Wed, 25 Sep 2024 07:56:22 GMT"
 								},
 								{
 									"key": "Server",
@@ -634,7 +562,7 @@
 								},
 								{
 									"key": "Content-Length",
-									"value": "166"
+									"value": "515"
 								},
 								{
 									"key": "X-Content-Type-Options",
@@ -643,14 +571,236 @@
 								{
 									"key": "Referrer-Policy",
 									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"test\",\n            \"email\": \"a@g.com\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"test\",\n            \"email\": \"b@g.com\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"test\",\n            \"email\": \"c@g.com\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"test\",\n            \"email\": \"anmol@g.com\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"test\",\n            \"email\": \"anmol@goel.com\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"test\",\n            \"email\": \"anmol@12.com\"\n        },\n        {\n            \"id\": 7,\n            \"name\": \"test\",\n            \"email\": \"anmol@1.com\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"test\",\n            \"email\": \"anmol@2.com\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"test\",\n            \"email\": \"anmol@3.com\"\n        }\n    ],\n    \"current_number\": 0,\n    \"total_pages\": 1,\n    \"status\": \"1\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "refresh",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyNzMzMjk1OSwiaWF0IjoxNzI3MjQ2NTU5LCJqdGkiOiIzNTY1NjI0Y2YyZGY0YWE5OGI2MGNkM2IyNGFjMmM3OCIsInVzZXJfaWQiOjR9.YGYkfK8rgtNZZ1F60RcQ5YMNnEnw2toYo-WdpgLcvYg",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/token/refresh/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"token",
+								"refresh",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Refresh Token",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Token ",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "refresh",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyNzMzMjk1OSwiaWF0IjoxNzI3MjQ2NTU5LCJqdGkiOiIzNTY1NjI0Y2YyZGY0YWE5OGI2MGNkM2IyNGFjMmM3OCIsInVzZXJfaWQiOjR9.YGYkfK8rgtNZZ1F60RcQ5YMNnEnw2toYo-WdpgLcvYg",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseURL}}/api/v1/token/refresh/",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"token",
+										"refresh",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 25 Sep 2024 06:45:03 GMT"
 								},
 								{
-									"key": "Cross-Origin-Opener-Policy",
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.8.6"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept"
+								},
+								{
+									"key": "Allow",
+									"value": "POST, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "483"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
 									"value": "same-origin"
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"test\",\n            \"email\": \"a@g.com\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"test\",\n            \"email\": \"b@g.com\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"test\",\n            \"email\": \"c@g.com\"\n        }\n    ],\n    \"status\": \"1\"\n}"
+							"body": "{\n    \"access\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI3MjQ3MDAzLCJpYXQiOjE3MjcyNDY1NTksImp0aSI6ImEwZmJhOTU4ZDg5YzQ0NmM4YTNjZTk3ZWY0ZjgwMjBhIiwidXNlcl9pZCI6NH0.ki12y6Y96qDd45bJw1v0cVEDI9F2HGSYmPvoRUnNJIQ\",\n    \"refresh\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcyNzMzMzEwMywiaWF0IjoxNzI3MjQ2NzAzLCJqdGkiOiJhZWU2YjBiZmUxOTE0OGY2YjQ5OWU4MzRjMWIzNzdhMSIsInVzZXJfaWQiOjR9.x-jyreSx87mexZoZ76sPqrn14CDMGNAyykHUv36uw5s\"\n}"
+						}
+					]
+				},
+				{
+					"name": "User LOg",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzI3MjYwNDUxLCJpYXQiOjE3MjcyNTk1NTEsImp0aSI6IjZhYWZjZDU3ODg2ZjRjNjFhNzYzZDJjNzQ4OTc0NDA1IiwidXNlcl9pZCI6MX0.Qy3yCLbUQTCWtO7ssumSgnC6nEE1ziIMs6e8BYklo6w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/connectionslog/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"connectionslog",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Sent",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{token}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{baseURL}}/api/v1/profile/connections/sent/",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										"connections",
+										"sent",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 27 Jan 2022 13:49:51 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "WSGIServer/0.2 CPython/3.6.8"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept, Origin"
+								},
+								{
+									"key": "Allow",
+									"value": "GET, HEAD, OPTIONS"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "DENY"
+								},
+								{
+									"key": "Content-Length",
+									"value": "680"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Referrer-Policy",
+									"value": "same-origin"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"id\": 1,\n            \"to_user\": {\n                \"id\": 1,\n                \"name\": \"\",\n                \"profile_pic\": \"/media/uploads/profile/1/dpImages/1-Screenshot_2021-11-16_at_6.31.01_PM.png\",\n                \"profile_link\": \"ssj9bEDt\",\n                \"designation\": \"\",\n                \"organisation\": \"\"\n            },\n            \"state\": false,\n            \"timestamp\": \"2022-01-27T13:40:20.479147Z\",\n            \"u_timestamp\": \"2022-01-27T13:40:20.479147Z\",\n            \"from_user\": 2\n        },\n        {\n            \"id\": 2,\n            \"to_user\": {\n                \"id\": 3,\n                \"name\": \"Kush singh\",\n                \"profile_pic\": \"/media/uploads/profile/3/dpImages/3-Upscaled.jpg\",\n                \"profile_link\": \"http://www.chalkmates.com\",\n                \"designation\": \"Software Engineer\",\n                \"organisation\": \"Chalkmates\"\n            },\n            \"state\": false,\n            \"timestamp\": \"2022-01-27T13:46:37.359786Z\",\n            \"u_timestamp\": \"2022-01-27T13:46:37.359786Z\",\n            \"from_user\": 2\n        }\n    ],\n    \"message\": \"success\",\n    \"status\": \"1\"\n}"
 						}
 					]
 				}
@@ -686,13 +836,13 @@
 					},
 					"response": [
 						{
-							"name": "My Connections",
+							"name": "List Friends",
 							"originalRequest": {
 								"method": "GET",
 								"header": [
 									{
 										"key": "Authorization",
-										"value": "token {{token 2}}",
+										"value": "token 8483814c09e0dde91da8911ffcd5f80f88c46176",
 										"type": "text"
 									}
 								],
@@ -715,7 +865,7 @@
 							"header": [
 								{
 									"key": "Date",
-									"value": "Mon, 25 Mar 2024 13:45:52 GMT"
+									"value": "Wed, 25 Sep 2024 09:32:49 GMT"
 								},
 								{
 									"key": "Server",
@@ -748,10 +898,6 @@
 								{
 									"key": "Referrer-Policy",
 									"value": "same-origin"
-								},
-								{
-									"key": "Cross-Origin-Opener-Policy",
-									"value": "same-origin"
 								}
 							],
 							"cookie": [],
@@ -771,14 +917,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/api/v1/profile/connections/6/request/",
+							"raw": "{{baseURL}}/api/v1/connections/6/request/",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"profile",
 								"connections",
 								"6",
 								"request",
@@ -1055,14 +1200,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/api/v1/profile/connections/sent/",
+							"raw": "{{baseURL}}/api/v1/connections/sent/",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"profile",
 								"connections",
 								"sent",
 								""
@@ -1154,14 +1298,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/api/v1/profile/connections/1/withdraw/",
+							"raw": "{{baseURL}}/api/v1/connections/1/withdraw/",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"profile",
 								"connections",
 								"1",
 								"withdraw",
@@ -1258,14 +1401,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/api/v1/profile/connections/2/accept/",
+							"raw": "{{baseURL}}/api/v1/connections/2/accept/",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"profile",
 								"connections",
 								"2",
 								"accept",
@@ -1362,14 +1504,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseURL}}/api/v1/profile/connections/9/ignore/",
+							"raw": "{{baseURL}}/api/v1/connections/9/ignore/",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"api",
 								"v1",
-								"profile",
 								"connections",
 								"9",
 								"ignore",
@@ -1455,6 +1596,12 @@
 					]
 				}
 			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8000"
 		}
 	]
 }

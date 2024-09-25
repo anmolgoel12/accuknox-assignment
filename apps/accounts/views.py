@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.db import transaction
@@ -12,6 +14,7 @@ from rest_framework.throttling import UserRateThrottle
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from yaml import serialize
 
 from accuknox.permission import RBACPermission
 from accuknox.utils import custom_success_response, update_object_response
@@ -19,6 +22,7 @@ from accuknox.utils import custom_success_response, update_object_response
 from .models import *
 from .serializer import (
     ConnectionInvitationSerializer,
+    ConnectionLogSerializer,
     ConnectionSentSerializer,
     CreateUserSerializer,
     UserSearchSerializer,
@@ -131,6 +135,8 @@ class ConnectionsViewSet(ModelViewSet):
     def request(self, request, pk):
         """
         Send friend request
+        o	If a user rejects a friend request, the sender cannot send another request for a configurable cooldown period (e.g., 24 hours).
+        o	Add a feature to block/unblock users, which prevents sending friend requests or viewing profiles
         """
         with transaction.atomic():
             from_user = request.user
@@ -140,7 +146,32 @@ class ConnectionsViewSet(ModelViewSet):
             ).exists():
                 if to_user == from_user:
                     raise ValidationError({"message": ["Cannot send request to self"]})
+                connectionlog = ConnectionLog.objects.filter(
+                    from_user=to_user,
+                    to_user=from_user,
+                    action__in=["reject", "blocked"],
+                ).last()
+                if connectionlog:
+                    if (
+                        connectionlog.action == "reject"
+                        and connectionlog.date
+                        > datetime.datetime.now() - datetime.timedelta(days=1)
+                    ):
+                        raise ValidationError(
+                            {"message": ["Request from rejected within 24hours"]}
+                        )
+                    if connectionlog.action == "blocked":
+                        raise ValidationError(
+                            {
+                                "message": [
+                                    "User has blocked you. Connection request cant be sent"
+                                ]
+                            }
+                        )
                 Connections.objects.get_or_create(from_user=from_user, to_user=to_user)
+                ConnectionLog.objects.create(
+                    from_user=from_user, to_user=to_user, action="sent"
+                )
                 return update_object_response(message="success, Request sent")
             else:
                 raise ValidationError({"message": ["Invitation from the user exists"]})
@@ -164,7 +195,29 @@ class ConnectionsViewSet(ModelViewSet):
                 )
             cr.state = True
             cr.save()
+            ## Logginf connection Request
+            ConnectionLog.objects.create(
+                from_user=cr.to_user, to_user=cr.from_user, action="accept"
+            )
             return update_object_response(message="success, Request accepted")
+
+    def block(self, request, pk=None):
+        """
+        block Friend Request
+        """
+        with transaction.atomic():
+            cr = self.get_object()
+            if not cr.to_user_id == request.user.id:
+                raise ValidationError(
+                    {"message": ["Request is not owned by Logged In user"]}
+                )
+            cr.state = False
+            cr.save()
+            ## Logginf connection Request
+            ConnectionLog.objects.create(
+                from_user=cr.to_user, to_user=cr.from_user, action="blocked"
+            )
+            return update_object_response(message="success,User Request Blocked")
 
     @action(
         detail=False,
@@ -244,3 +297,15 @@ class ConnectionsViewSet(ModelViewSet):
         raise ValidationError(
             {"message": ["Connection doesn't exists Or you are not a owner of request"]}
         )
+
+
+class ConnectionLogViewSet(ModelViewSet):
+    queryset = ConnectionLog.objects.all()
+    serializer_class = ConnectionLogSerializer
+    permission_classes = [IsAuthenticated, RBACPermission]
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        log = ConnectionLog.objects.filter(from_user=user)
+        serializer = self.get_serializer(log, many=True)
+        return custom_success_response(serializer.data)

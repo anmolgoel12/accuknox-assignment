@@ -61,3 +61,22 @@ class User(AbstractUser):
 
     class Meta:
         verbose_name_plural = "User"
+
+
+class ConnectionLog(models.Model):
+    from_user = models.ForeignKey(
+        "accounts.User", related_name="from_user_log", on_delete=models.CASCADE
+    )
+    to_user = models.ForeignKey(
+        "accounts.User", related_name="to_user_log", on_delete=models.CASCADE
+    )
+    action = models.CharField(
+        (
+            ("sent", "sent"),
+            ("accepted", "accepted"),
+            ("blocked", "blocked"),
+            ("rejected", "rejected"),
+        ),
+        max_length=10,
+    )
+    date = models.DateTimeField(auto_now_add=True)
